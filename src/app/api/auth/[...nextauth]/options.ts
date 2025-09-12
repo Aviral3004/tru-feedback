@@ -47,10 +47,6 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
-  //* For adding you own custom login, signup pages you can call these routes
-  pages: {
-    signIn: "/sign-in",
-  },
   //* callbacks
   callbacks: {
     async session({ session, token }) {
@@ -71,6 +67,10 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
+  },
+  //* For adding you own custom login, signup pages you can call these routes
+  pages: {
+    signIn: "/sign-in",
   },
   session: {
     strategy: "jwt",
