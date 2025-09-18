@@ -74,17 +74,22 @@ const SignUp = () => {
     try {
       const response = await axios.post<ApiResponse>(`/api/sign-up`, data);
       toast.success("Success", {
-        description: response.data.message,
+        description: (
+          <span className="text-gray-600 text-sm">{response.data.message}</span>
+        ),
       });
       router.replace(`/verify/${username}`);
-      setIsSubmitting(false);
     } catch (error) {
       console.error("Error in signup of user", error);
       const axiosError = error as AxiosError<ApiResponse>;
       let errorMessage = axiosError.response?.data.message;
       toast.error("Signup failed", {
-        description: errorMessage,
+        description: (
+          <span className="text-gray-600 text-sm">{errorMessage}</span>
+        ),
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -122,7 +127,7 @@ const SignUp = () => {
                   <p
                     className={`text-sm ${usernameMessage === "Username is available" ? "text-green-500" : "text-red-500"}`}
                   >
-                    test {usernameMessage}
+                    {usernameMessage}
                   </p>
                   {/* This below (<FormMessage/>) is for error messages for that field */}
                   <FormMessage />
