@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
-import { useDebounceCallback } from "usehooks-ts";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import axios, { AxiosError } from "axios";
-import { ApiResponse } from "@/types/ApiResponse";
 import {
   Form,
   FormControl,
@@ -25,11 +22,7 @@ import { signInSchema } from "@/schemas/signInSchema";
 import { signIn } from "next-auth/react";
 
 const SignIn = () => {
-  const [username, setUsername] = useState("");
-  const [usernameMessage, setUsernameMessage] = useState("");
-  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const debounced = useDebounceCallback(setUsername, 300);
   const router = useRouter();
 
   //* Zod implementation
@@ -48,18 +41,27 @@ const SignIn = () => {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
+      callbackUrl: "/dashboard",
     });
 
     if (result?.error) {
-      toast.error("Login Failed", {
-        description: (
-          <span className="text-sm text-gray-600">
-            Incorrent username or password
-          </span>
-        ),
-      });
+      if (result.error === "CredentialsSignin") {
+        toast.error("Login Failed", {
+          description: (
+            <span className="text-sm text-gray-600">
+              Incorrect username or password
+            </span>
+          ),
+        });
+      } else {
+        toast.error("Error", {
+          description: (
+            <span className="text-sm text-gray-600">{result.error}</span>
+          ),
+        });
+      }
     }
-
+    
     if (result?.url) {
       router.replace("/dashboard");
     }
@@ -81,18 +83,12 @@ const SignIn = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Now FormField starts for each form input after doing {...form} (i.e. destructuring it) */}
             <FormField
-              control={form.control}
               name="identifier"
+              control={form.control}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email/Username</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Email/Username"
-                      {...field}
-                      name="email"
-                    />
-                  </FormControl>
+                  <Input placeholder="Email/Username" {...field} />
                   <FormMessage />
                 </FormItem>
               )}
@@ -103,14 +99,7 @@ const SignIn = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Password"
-                      {...field}
-                      name="password"
-                      type="password"
-                    />
-                  </FormControl>
+                  <Input placeholder="Password" {...field} type="password" />
                   <FormMessage />
                 </FormItem>
               )}
@@ -121,7 +110,7 @@ const SignIn = () => {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
                 </>
               ) : (
-                "Signup"
+                "Submit"
               )}
             </Button>
           </form>
