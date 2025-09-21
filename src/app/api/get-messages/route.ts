@@ -39,13 +39,23 @@ export async function GET() {
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
 
-    if (!user || user.length === 0) {
+    if (!user) {
       return Response.json(
         {
           success: false,
           message: "User not found",
         },
         { status: 401 }
+      );
+    }
+
+    if (user.length === 0) {
+      return Response.json(
+        {
+          success: false,
+          message: "There are no messages for the user yet",
+        },
+        { status: 400 }
       );
     }
 

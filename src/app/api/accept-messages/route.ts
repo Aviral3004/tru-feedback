@@ -37,16 +37,18 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          message: "Failed to update user status to accept messages",
+          message: "Unable to find user to update message acceptance status",
         },
         { status: 401 }
       );
     }
 
+    console.log("Updated user:", updatedUser);
+
     return Response.json(
       {
         success: true,
-        message: "Message acceptance status updated succesfully",
+        message: "Message acceptance status updated successfully",
         updatedUser,
       },
       { status: 200 }
