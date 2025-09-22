@@ -1,7 +1,9 @@
 "use client";
 import MessageCard from "@/components/MessageCard";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { Message } from "@/model/User";
 import { acceptMessageSchema } from "@/schemas/acceptMessageSchema";
@@ -14,6 +16,52 @@ import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+export function SkeletonDashboard() {
+  return (
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+      {/* Header */}
+      <Skeleton className="h-10 w-64 mb-6" />
+
+      {/* Copy Link Section */}
+      <div className="mb-6">
+        <Skeleton className="h-6 w-48 mb-3" />
+        <div className="flex items-center">
+          <Skeleton className="h-10 w-full mr-2" />
+          <Skeleton className="h-10 w-20" />
+        </div>
+      </div>
+
+      {/* Switch Section */}
+      <div className="mb-6 flex items-center">
+        <Skeleton className="h-6 w-12 rounded-full" />
+        <Skeleton className="h-5 w-24 ml-3" />
+      </div>
+
+      {/* Separator */}
+      <Skeleton className="h-[1px] w-full mb-4" />
+
+      {/* Refresh Button */}
+      <Skeleton className="h-10 w-10 mb-6" />
+
+      {/* Messages Grid (simulate 4 message cards) */}
+      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {[1, 2].map((i) => (
+          <Card key={i}>
+            <CardHeader>
+              <Skeleton className="h-5 w-32" />
+            </CardHeader>
+            <CardContent className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -117,7 +165,7 @@ const Dashboard = () => {
   };
 
   if (!session || !session.user) {
-    return <div></div>;
+    return <SkeletonDashboard />;
   }
 
   const { username } = session?.user as User;
