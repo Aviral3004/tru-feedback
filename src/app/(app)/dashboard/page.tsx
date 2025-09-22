@@ -20,7 +20,6 @@ const Dashboard = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
 
-
   const handleDeleteMessage = (messageId: string) => {
     setMessages(messages.filter((message) => message._id !== messageId));
   };
@@ -40,17 +39,13 @@ const Dashboard = () => {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get<ApiResponse>(`/api/accept-messages`);
-      console.log(
-        "response accept message val:",
-        response.data.isAcceptingMessage
-      );
-      setValue("acceptMessages", response.data.isAcceptingMessage as boolean);
+      setValue("acceptMessages", response.data.isAcceptingMessages as boolean);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast.error("Error", {
         description: (
           <span className="text-sm text-gray-600">
-            {axiosError.response?.data.message ||
+            {axiosError.response?.data.message ??
               "Failed to fetch message settings"}
           </span>
         ),
@@ -75,14 +70,13 @@ const Dashboard = () => {
               </span>
             ),
           });
-        } else {
         }
       } catch (error) {
         const axiosError = error as AxiosError<ApiResponse>;
         toast.error("Error", {
           description: (
             <span className="text-sm text-gray-600">
-              {axiosError.response?.data.message ||
+              {axiosError.response?.data.message ??
                 "Failed to fetch message settings"}
             </span>
           ),
@@ -96,9 +90,7 @@ const Dashboard = () => {
   );
 
   useEffect(() => {
-    if (!session || !session.user) {
-      return;
-    }
+    if (!session || !session.user) return;
     fetchMessages();
     fetchAcceptMessage();
   }, [session, setValue, fetchAcceptMessage, fetchMessages, toast]);
@@ -116,7 +108,7 @@ const Dashboard = () => {
       toast.error("Error", {
         description: (
           <span className="text-sm text-gray-600">
-            {axiosError.response?.data.message ||
+            {axiosError.response?.data.message ??
               "Failed to fetch message settings"}
           </span>
         ),
