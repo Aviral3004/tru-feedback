@@ -23,11 +23,11 @@ export async function GET() {
     );
   }
 
-  const userId = new mongoose.Types.ObjectId(user._id); //* This conversion is needed for aggregation pipeline so proper mongoose id is needed not in string
+  const userId = new mongoose.Types.ObjectId(user._id); //* This conversion is needed for aggregation pipeline so proper mongoose id is needed, not in string
   try {
     const user = await UserModel.aggregate([
       //* pipelines
-      { $match: { id: userId } },
+      { $match: { _id: userId } },
 
       //* now we add pipeline for unwinding arrays (converting each array element to corresponding each object)
       { $unwind: "$messages" },
@@ -37,7 +37,7 @@ export async function GET() {
 
       //* Now we finally add pipeline to group all these objects
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
-    ]);
+    ]).exec();
 
     if (!user) {
       return Response.json(

@@ -23,6 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { useCompletion } from "@ai-sdk/react";
 import z from "zod";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const specialChar = "||";
 const parseStringMessages = (messageString: string): string[] => {
@@ -143,7 +144,14 @@ const MessagePage = () => {
             onClick={fetchSuggestedMessages}
             disabled={isSuggestLoading}
           >
-            Suggest Messages
+            {isSuggestLoading ? (
+              <div className="flex items-center">
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Please Wait
+              </div>
+            ) : (
+              "Suggest Messages"
+            )}
           </Button>
           <p>Click on any message below to select it.</p>
         </div>
@@ -154,6 +162,10 @@ const MessagePage = () => {
           <CardContent className="flex flex-col space-y-4">
             {error ? (
               <p className="text-red-500">{error.message}</p>
+            ) : isSuggestLoading ? (
+              Array.from({ length: 3 }).map((_, idx) => (
+                <Skeleton key={idx} className="h-8 w-full rounded-md" />
+              ))
             ) : (
               parseStringMessages(completion).map((msg, idx) => (
                 <Button

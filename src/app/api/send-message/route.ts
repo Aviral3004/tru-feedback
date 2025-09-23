@@ -7,7 +7,7 @@ export async function POST(request: Request) {
 
   const { username, content } = await request.json();
   try {
-    const user = await UserModel.findOne({ username });
+    const user = await UserModel.findOne({ username }).exec();
     if (!user) {
       return Response.json(
         {
@@ -31,6 +31,7 @@ export async function POST(request: Request) {
 
     const newMessage = { content, createdAt: new Date() };
     user.messages.push(newMessage as Message);
+    await user.save();
     return Response.json(
       {
         success: true,
@@ -39,7 +40,7 @@ export async function POST(request: Request) {
       { status: 200 }
     );
   } catch (error) {
-    console.log("Error adding messages", error)
+    console.log("Error adding messages", error);
     return Response.json(
       {
         success: false,
