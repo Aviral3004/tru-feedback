@@ -171,7 +171,7 @@ const MessagePage = () => {
                 <Button
                   key={idx}
                   variant="outline"
-                  className="mb-2"
+                  className="mb-2 w-full whitespace-normal break-words text-left h-auto items-start"
                   onClick={() => handleMessageClick(msg)}
                 >
                   {msg}
