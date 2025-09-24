@@ -37,7 +37,6 @@ const MessageCard = ({ message, onMessageDelete }: MessageCardProps) => {
       `/api/delete-message/${message._id}`
     );
     toast(response.data.message);
-    console.log("message._id value:", message._id);
     onMessageDelete(message._id as string);
   };
   return (

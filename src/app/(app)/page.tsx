@@ -14,8 +14,8 @@ import { useEffect, useState } from "react";
 
 const SkeletonCard = () => {
   return (
-    <div className="w-full flex justify-center">
-        <Skeleton className="w-[23vw] h-96"/>
+    <div className="p-1 w-full max-w-xs mx-auto">
+      <Skeleton className="h-105 w-full rounded-xl" />
     </div>
   );
 };
@@ -47,7 +47,7 @@ const HomePage = () => {
           <SkeletonCard />
         ) : (
           <Carousel
-            plugins={[AutoPlay({ delay: 2000 })]}
+            plugins={[AutoPlay({ delay: 2000, stopOnInteraction: false })]}
             className="w-full max-w-xs"
           >
             <CarouselContent>
@@ -68,8 +68,8 @@ const HomePage = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className="hidden sm:flex" />
+            <CarouselNext className="hidden sm:flex" />
           </Carousel>
         )}
       </main>
